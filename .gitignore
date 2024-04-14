@@ -1,0 +1,6 @@
+.env
+testenv/
+src/notes/*
+src/db/*
+__pycache__/
+.vscode/
