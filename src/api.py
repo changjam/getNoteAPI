@@ -13,7 +13,9 @@ from tools.method import (
                         get_title,
                         get_local_note_data,
                         write_local_note_data,
-                        set_note_data)
+                        set_note_data,
+                        check_notes_id_exist,
+                        change_last_saveTime_format)
 
 app = FastAPI()
 
@@ -33,11 +35,14 @@ async def get_notesList():
     global LAST_SAVE_TIME
     note_list_data: list = get_local_note_list_data()
     
-    # if isExpire(LAST_SAVE_TIME, limit_time_minute = 10):
-    #     note_list_data, LAST_SAVE_TIME = update(note_list_data)
+    if isExpire(LAST_SAVE_TIME, limit_time_minute = 1):
+        note_list_data, LAST_SAVE_TIME = update(note_list_data)
 
     tags: list = get_tags(note_list_data)
     
+    print('last save time: ', change_last_saveTime_format(LAST_SAVE_TIME))
+    
+    # check result
     if len(tags) == 0: 
         return Errors.NO_RESULT_ERROR
 
@@ -50,11 +55,14 @@ async def get_notes_by_tag(tag_input: TAG):
     tag: str = tag_input.tag
     note_list_data: list = get_local_note_list_data()
 
-    # if isExpire(LAST_SAVE_TIME, limit_time_minute = 10):
-    #     note_list_data, LAST_SAVE_TIME = update(note_list_data)
+    if isExpire(LAST_SAVE_TIME, limit_time_minute = 1):
+        note_list_data, LAST_SAVE_TIME = update(note_list_data)
     
     result: list = get_title(note_list_data, tag)
+    
+    print('last save time: ', change_last_saveTime_format(LAST_SAVE_TIME))
 
+    # check result
     if len(result) == 0: 
         return Errors.NO_RESULT_ERROR
 
@@ -68,9 +76,15 @@ async def get_note_by_id(nid_input: NID) -> Note_Data:
     data_path: str = f'notes/{nid}.json'
     note_data: list = []
 
-    # if isExpire(LAST_SAVE_TIME, limit_time_minute = 60*24):
-    #     note_list_data, LAST_SAVE_TIME = update(note_list_data)
+    # check is expire
+    if isExpire(LAST_SAVE_TIME, limit_time_minute = 60*24):
+        note_list_data, LAST_SAVE_TIME = update(note_list_data)
 
+    # check nid exist
+    if not check_notes_id_exist(nid, data_path):
+        return Errors.NOTES_NOT_EXIST_ERROR
+
+    # check path exist
     if os.path.exists(data_path):
         note_data = get_local_note_data(data_path)
     else:
@@ -79,6 +93,9 @@ async def get_note_by_id(nid_input: NID) -> Note_Data:
     
     result: Note_Data = set_note_data(note_data)
 
+    print('last save time: ', change_last_saveTime_format(LAST_SAVE_TIME))
+
+    # check result
     if len(result) == 0: 
         return Errors.NO_RESULT_ERROR
 

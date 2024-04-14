@@ -96,3 +96,13 @@ def get_notes_id_list(data: list) -> set:
 def remove_local_note_data(data_path: str) -> None:
     if os.path.exists(data_path):
         os.remove(data_path)
+
+def change_last_saveTime_format(last_save_time: int) -> str:
+    dt_object = datetime.fromtimestamp(last_save_time)
+    return dt_object.strftime('%Y-%m-%d %H:%M:%S')
+
+def check_notes_id_exist(note_id: str, data_path: str) -> bool:
+    note_list_data = get_local_note_data(data_path)
+    note_id_list = get_notes_id_list(note_list_data)
+    return note_id in note_id_list
+        
