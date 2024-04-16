@@ -28,9 +28,9 @@ class Note_List_Data(BaseModel):
 
 @dataclass
 class Errors:
-    NOTES_NOT_EXIST_ERROR = JSONResponse({'result': 400}, 400)
-    NO_RESULT_ERROR = JSONResponse({'result': 400}, 400)
-    INTERNAL_ERROR = JSONResponse({'result':999}, 500)
+    NOTES_NOT_EXIST_ERROR = JSONResponse({'result': 'NOTES_NOT_EXIST_ERROR'}, 400)
+    NO_RESULT_ERROR = JSONResponse({'result': 'NO_RESULT_ERROR'}, 400)
+    INTERNAL_ERROR = JSONResponse({'result':'INTERNAL_ERROR'}, 500)
 
 P = ParamSpec('P')
 
