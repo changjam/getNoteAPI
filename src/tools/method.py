@@ -48,16 +48,20 @@ def remove_diff_notes(new_data: list, old_data: list) -> None:
         if new_item is None or old_item != new_item:
             remove_local_note_data(f'notes/{old_id}.json')
 
-def get_tags(data: list) -> list:
+def get_tags(data: list) -> list | None:
     try:
-        tags: list = []
+        result: dict = {}
         for note in data:
             if note['tags']:
-                tags.append(note['tags'][0])
-        return list(set(tags))
+                tag = note['tags'][0]
+                if result.get(tag):
+                    result[tag] += 1
+                else:
+                    result[tag] = 1
+        return [{"category": key, "counts": value} for key, value in result.items()]
     except Exception as e:
         print(f"An error occurred: {e}")
-        return []
+        return None
 
 def get_title(data: list, tag: str) -> list:
     title_list: list = []

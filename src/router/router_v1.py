@@ -18,7 +18,7 @@ from tools.method import (
 router = APIRouter(prefix="/api/v1", tags=['v1'])
 
 
-@router.post("/get_notesList")
+@router.get("/get_notesList")
 async def get_notesList():
     global LAST_SAVE_TIME
     note_list_data: list = get_note_list_data()
@@ -27,12 +27,12 @@ async def get_notesList():
     if isExpire(LAST_SAVE_TIME, limit_time_minute = 1):
         note_list_data, LAST_SAVE_TIME = update(note_list_data)
 
-    tags: list = get_tags(note_list_data)
+    tags: list | None = get_tags(note_list_data)
     
     print('last save time: ', change_last_saveTime_format(LAST_SAVE_TIME))
     
     # check result
-    if len(tags) == 0: 
+    if not tags or len(tags) == 0:
         return Errors.NO_RESULT_ERROR
 
     return JSONResponse(content=tags, status_code=200)
