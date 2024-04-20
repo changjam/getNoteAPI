@@ -7,7 +7,7 @@ from tools.method import (
                         get_note_list_data,
                         write_note_list_data,
                         get_tags,
-                        get_title,
+                        get_notes_data,
                         get_note_data,
                         write_note_data,
                         set_note_data,
@@ -41,13 +41,17 @@ async def get_notesList():
 async def get_notes_by_tag(tag_input: TAG):
     global LAST_SAVE_TIME
     tag: str = tag_input.tag
+
+    if tag == 'Private':
+        return Errors.NOTES_NOT_EXIST_ERROR
+
     note_list_data: list = get_note_list_data()
     write_note_list_data(note_list_data)
 
     if isExpire(LAST_SAVE_TIME, limit_time_minute = 1):
         note_list_data, LAST_SAVE_TIME = update(note_list_data)
     
-    result: list = get_title(note_list_data, tag)
+    result: list = get_notes_data(note_list_data, tag)
     
     print('last save time: ', change_last_saveTime_format(LAST_SAVE_TIME))
 
@@ -59,7 +63,7 @@ async def get_notes_by_tag(tag_input: TAG):
 
 @router.post("/get_note_by_id")
 @catch_error
-async def get_note_by_id(nid_input: NID) -> Note_Data:
+async def get_note_by_id(nid_input: NID):
     global LAST_SAVE_TIME
     nid: str = nid_input.nid
     data_path: str = f'notes/{nid}.json'

@@ -20,11 +20,6 @@ class Note_Data(BaseModel):
     content: str
     lastUpdate: str
 
-class Note_List_Data(BaseModel):
-    notes_num: int
-    tags_list: list
-    notes_info: list[Note_Data]
-
 
 @dataclass
 class Errors:

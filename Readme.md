@@ -3,7 +3,10 @@
 
 ## Update record
 * 04/18/2024: Version one online
-* 04/20/2024: Add cache
+* 04/19/2024: Add cache
+* 04/20/2024: 
+  * Add Private tags, if notes have "Private" tag, it can't be get by client.
+  * Add IMG tags, get_notesList router will return each tags name 、 counts and img.
 
 ### Setup
 * [Get Your HackMD token](https://hackmd.io/@hackmd-api/developer-portal/https%3A%2F%2Fhackmd.io%2F%40hackmd-api%2FrkoVeBXkq)

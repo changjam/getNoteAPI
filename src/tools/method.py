@@ -3,12 +3,16 @@ from dotenv import load_dotenv
 from PyHackMD import API
 import json
 import time
+import pytz
 from datetime import datetime
 from .lib import Note_Data
 
 load_dotenv()
 hackmd_token = os.environ.get('hackmd_token', None)
 HACKMD_API = API(hackmd_token)
+
+def isPrivate(tags: list) -> bool:
+    return 'Private' in tags
 
 def isExpire(last_save_time: float, limit_time_minute: int) -> bool:
     if not last_save_time:
@@ -51,25 +55,31 @@ def remove_diff_notes(new_data: list, old_data: list) -> None:
 def get_tags(data: list) -> list | None:
     try:
         result: dict = {}
+        img_obj: dict
         for note in data:
-            if note['tags']:
+            if isPrivate(note['tags']):
+                if 'IMG' in note['tags']:
+                    nid = note['id']
+                    img_info = get_note_data(f'notes/{nid}.json', nid)
+                    img_obj = json.loads(img_info['content'])
+            elif note['tags']:
                 tag = note['tags'][0]
                 if result.get(tag):
                     result[tag] += 1
                 else:
                     result[tag] = 1
-        return [{"category": key, "counts": value} for key, value in result.items()]
+
+        return [{"category": key, "counts": value, "img": img_obj.get(key, "")} for key, value in result.items()]
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
 
-def get_title(data: list, tag: str) -> list:
+def get_notes_data(data: list, tag: str) -> list:
     title_list: list = []
     for note in data:
         if note['tags'][0] == tag:
             title_list.append(set_note_data(note))
     return title_list
-
 
 def get_note_data(data_path: str, nid: str) -> list:
     if not os.path.exists(data_path):
@@ -93,22 +103,23 @@ def set_note_data(data: dict) -> Note_Data:
     note_data['lastUpdate'] = str(yyyymmdd_date)
     return note_data
 
-def get_notes_id_list(data: list) -> set:
-    id_list = []
-    for note in data:
-        id_list.append(note['id'])
-    return set(id_list)
-
 def remove_local_note_data(data_path: str) -> None:
     if os.path.exists(data_path):
         os.remove(data_path)
 
 def change_last_saveTime_format(last_save_time: int) -> str:
     dt_object = datetime.fromtimestamp(last_save_time)
+    tz = pytz.timezone('Asia/Taipei')
+    dt_object = dt_object.replace(tzinfo=pytz.utc).astimezone(tz)
     return dt_object.strftime('%Y-%m-%d %H:%M:%S')
+
+def get_notes_id_list(data: list) -> set:
+    id_list = []
+    for note in data:
+        if not isPrivate(note['tags']): id_list.append(note['id'])
+    return set(id_list)
 
 def check_notes_id_exist(note_id: str) -> bool:
     note_list_data = get_note_list_data()
     note_id_list = get_notes_id_list(note_list_data)
     return note_id in note_id_list
-        
