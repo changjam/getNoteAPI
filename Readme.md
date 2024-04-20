@@ -89,10 +89,10 @@ curl -X 'POST' \
 JSONResponse({'result': 'NOTES_NOT_EXIST_ERROR'}, 400)
 ```
 #### NO_RESULT_ERROR
-```bash
+```python
 JSONResponse({'result': 'NO_RESULT_ERROR'}, 400)
 ```
 #### INTERNAL_ERROR
-```bash
+```python
 JSONResponse({'result': 'INTERNAL_ERROR'}, 500)
 ```
