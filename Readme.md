@@ -1,12 +1,19 @@
 # getNoteAPI
-> 使用 hackMD API ， 簡單部屬，快速使用。
+> Connected with hackMD API, easy to deploy and quick to use.
 
-## 版本紀錄
+## Update record
 * 04/18/2024: Version one online
 * 04/20/2024: Add cache
 
-### Setup 
-### 1. 本地運行
+### Setup
+* [Get Your HackMD token](https://hackmd.io/@hackmd-api/developer-portal/https%3A%2F%2Fhackmd.io%2F%40hackmd-api%2FrkoVeBXkq)
+* Please obtain your HackMD token first, and then create a .env file. Write your token in the file as shown in the example below:
+```python
+# .env
+hackmd_token=<your_hackmd_token>
+```
+
+### 1. Run local
 ```bash
 pip install -r requirements.txt
 cd src/
