@@ -77,8 +77,9 @@ def get_tags(data: list) -> list | None:
 def get_notes_data(data: list, tag: str) -> list:
     title_list: list = []
     for note in data:
-        if note['tags'][0] == tag:
-            title_list.append(set_note_data(note))
+        if note['tags']:
+            if tag in note['tags'] and not isPrivate(note['tags']):
+                title_list.append(set_note_data(note))
     return title_list
 
 def get_note_data(data_path: str, nid: str) -> list:
@@ -116,7 +117,7 @@ def change_last_saveTime_format(last_save_time: int) -> str:
 def get_notes_id_list(data: list) -> set:
     id_list = []
     for note in data:
-        if not isPrivate(note['tags']): id_list.append(note['id'])
+        if note['tags'] and not isPrivate(note['tags']): id_list.append(note['id'])
     return set(id_list)
 
 def check_notes_id_exist(note_id: str) -> bool:
