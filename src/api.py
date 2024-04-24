@@ -5,7 +5,12 @@ from router.router_v1 import router
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
-app = FastAPI()
+load_dotenv()
+
+app = FastAPI(
+    docs_url="/docs" if os.environ.get('isDev', 'false') == 'true' else None,
+    redoc_url="/docs" if os.environ.get('isDev', 'false') == 'true' else None
+)
 
 # 設定 CORS 標頭
 app.add_middleware(
@@ -18,6 +23,5 @@ app.add_middleware(
 app.include_router(router)
 
 if __name__ == "__main__":
-    load_dotenv()
     port = os.environ.get('PORT', 8000)
     uvicorn.run(app, host='0.0.0.0', workers=1, port=port)
