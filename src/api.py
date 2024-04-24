@@ -8,8 +8,8 @@ import os
 load_dotenv()
 
 app = FastAPI(
-    docs_url="/docs" if os.environ.get('isDev', 'false') == 'true' else None,
-    redoc_url="/docs" if os.environ.get('isDev', 'false') == 'true' else None
+    docs_url=None if os.getcwd() == '/app' else '/docs',
+    redoc_url=None if os.getcwd() == '/app' else '/redoc'
 )
 
 # 設定 CORS 標頭
