@@ -7,6 +7,7 @@
 * 04/20/2024: 
   * Add Private tags, if notes have "Private" tag, it can't be get by client.
   * Add IMG tags, get_notesList router will return each tags name 、 counts and img.
+* 05/26/2024: Add router path for healthy check.
 
 ### Setup
 * [Get Your HackMD token](https://hackmd.io/@hackmd-api/developer-portal/https%3A%2F%2Fhackmd.io%2F%40hackmd-api%2FrkoVeBXkq)
@@ -33,6 +34,11 @@ docker run -p 8000:8000 -e hackmd_token=<your_hackmd_token> get_note_api
 ```bash
 # get_notesList
 curl -X 'GET' \
+  'http://localhost:8000/api/v1/ping' \
+  -H 'accept: application/json'
+
+# get_notesList
+curl -X 'GET' \
   'http://localhost:8000/api/v1/get_notesList' \
   -H 'accept: application/json'
 
@@ -57,6 +63,11 @@ curl -X 'POST' \
 
 ### Response
 ```python
+# ping
+{
+  "result": "alive"
+}
+
 # get_notesList
 [
   {

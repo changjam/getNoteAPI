@@ -16,8 +16,12 @@ from tools.method import (
 
 router = APIRouter(prefix="/api/v1", tags=['v1'])
 
+@router.get("/ping")
+def ping():
+    return JSONResponse(content={"result": "alive"}, status_code=200)
 
 @router.get("/get_notesList")
+@catch_error
 async def get_notesList():
     global LAST_SAVE_TIME
     note_list_data: list = get_note_list_data()
