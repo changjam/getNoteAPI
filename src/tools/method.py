@@ -8,7 +8,7 @@ from datetime import datetime
 from .lib import Note_Data
 
 load_dotenv()
-hackmd_token = os.environ.get('hackmd_token', None)
+hackmd_token = os.environ.get('hackmd_token', '')
 HACKMD_API = API(hackmd_token)
 
 def isPrivate(tags: list) -> bool:
