@@ -32,7 +32,7 @@ docker run -p 8000:8000 -e hackmd_token=<your_hackmd_token> get_note_api
 ### Request
 #### CURL
 ```bash
-# get_notesList
+# healthy check
 curl -X 'GET' \
   'http://localhost:8000/api/v1/ping' \
   -H 'accept: application/json'
