@@ -1,6 +1,6 @@
 .env
 testenv/
 src/notes/*
-src/db/*
+src/db/*.json
 __pycache__/
 .vscode/
