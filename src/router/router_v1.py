@@ -29,9 +29,9 @@ def ping():
     return JSONResponse(content={"result": "alive"}, status_code=200)
 
 
-@router.get("/get_notesList")
+@router.get("/get_tags_list")
 @router_catch_error
-async def get_notesList():
+async def get_tags_list():
     global LAST_SAVE_TIME
     if not HACKMD_API or HACKMD_API == '':
         return Errors.NO_TOKEN_ERROR
