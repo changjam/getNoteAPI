@@ -6,16 +6,26 @@
 * 04/19/2024: Add cache
 * 04/20/2024: 
   * Add Private tags, if notes have "Private" tag, it can't be get by client.
-  * Add IMG tags, get_notesList router will return each tags name 、 counts and img.
+  * Add IMG tags, `get_tags_list` router will return each tags name 、 counts and img.
 * 05/26/2024: Add router path for healthy check.
+* 06/29/2024: improve code error handling.
 
-### Setup
+## Setup
 * [Get Your HackMD token](https://hackmd.io/@hackmd-api/developer-portal/https%3A%2F%2Fhackmd.io%2F%40hackmd-api%2FrkoVeBXkq)
 * Please obtain your HackMD token first, and then create a .env file. Write your token in the file as shown in the example below:
 ```python
 # .env
 hackmd_token=<your_hackmd_token>
 ```
+
+### HackMD Setting
+* Custom "tag" for your every note.
+* Add "Private" tag to the notes if you want to hide it from client.
+* Add "IMG" tag to the notes and follow the format below:
+   * Content use JSON format, keys are the tags name and values are the image url.
+   * It will be return in the `get_tags_list` router.
+![image_name](img/demo_1.png)
+
 
 ### 1. Run local
 ```bash
@@ -37,9 +47,9 @@ curl -X 'GET' \
   'http://localhost:8000/api/v1/ping' \
   -H 'accept: application/json'
 
-# get_notesList
+# get_tags_list
 curl -X 'GET' \
-  'http://localhost:8000/api/v1/get_notesList' \
+  'http://localhost:8000/api/v1/get_tags_list' \
   -H 'accept: application/json'
 
 # get_notes_by_tag
@@ -68,11 +78,12 @@ curl -X 'POST' \
   "result": "alive"
 }
 
-# get_notesList
+# get_tags_list
 [
   {
     "category": "string",
-    "counts": int
+    "counts": int,
+    "img": "string"
   }
 ]
 
@@ -82,7 +93,6 @@ curl -X 'POST' \
     "id": "string",
     "title": "string",
     "tags": "string",
-    "content": "",
     "lastUpdate": "string"
   }
 ]
@@ -98,6 +108,10 @@ curl -X 'POST' \
 ```
 ### Errors Response
 
+#### NO_TOKEN_ERROR
+```python
+JSONResponse({'result': 'NO_TOKEN_ERROR'}, 401)
+```
 #### NOTES_NOT_EXIST_ERROR
 ```python
 JSONResponse({'result': 'NOTES_NOT_EXIST_ERROR'}, 400)
